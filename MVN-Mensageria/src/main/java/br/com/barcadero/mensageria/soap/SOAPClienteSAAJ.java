@@ -1,6 +1,7 @@
 package br.com.barcadero.mensageria.soap;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 
 import javax.xml.bind.JAXBException;
@@ -16,16 +17,19 @@ import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
 
+import br.com.barcadero.mensageria.cte.CTeService;
+
 /**
  * Para transmitir os arquivos de XML do PAF
  * @author Rafael Rocha
  */
 public class SOAPClienteSAAJ {
 
-//    public static void main(String args[]) throws Exception {
-//    	new SOAPClienteSAAJ().sendAndReceive(getXMLReducao(), EnumTypeEnv.REDUCAO_Z);
-//    	//getResponse(getResponseReducaoZ());
-//    }
+	
+    public static void main(String args[]) throws Exception {
+    	new SOAPClienteSAAJ().sendAndReceive(new CTeService(), getXMLStatusServico());
+    	//getResponse(getResponseReducaoZ());
+    }
     
     /**
      * Enviar mensagem soap ao endpoint e receber a resposta
@@ -45,7 +49,7 @@ public class SOAPClienteSAAJ {
 	        //-------------------------------------------------------
 	        //Assinar arquivo xml
 	        //-------------------------------------------------------
-	        message = new Signature().sing(message);
+	        //message = new Signature().sing(message);
 	        // Send SOAP Message to SOAP Server
 	        //-------------------------------------------------------
 	        String url = service.getURLService(); //"http://webservices.sathomologa.sef.sc.gov.br/wsDfeSiv/Recepcao.asmx";
@@ -72,6 +76,10 @@ public class SOAPClienteSAAJ {
 		}
 	}
     
+private SOAPMessage createSOAPRequest(IServices service, String message) throws SOAPException, IOException {
+	return service.buildSoapMessage(message);
+}
+
 //    /**
 //     * Extrair o objeti de retorno direto da mensagem
 //     * @param soapResponse
@@ -130,50 +138,50 @@ public class SOAPClienteSAAJ {
      * @return
      * @throws Exception
      */
-    private static SOAPMessage createSOAPRequest(IServices service, String message) throws Exception {
-        //MessageFactory messageFactory 	= MessageFactory.newInstance();
-        //SOAPMessage soapMessage 		= messageFactory.createMessage();
-//    	SOAPMessage soapMessage = SOAPMessageUtil.buildMessage();
-//    	SOAPPart soapPart 		= soapMessage.getSOAPPart();
-
-        //String serverURI = "http://ws.cdyne.com/";
-        //-------------------------------------------------------
-        // SOAP Envelope
-        //-------------------------------------------------------
-//        SOAPEnvelope envelope = soapPart.getEnvelope();
-//        envelope.addNamespaceDeclaration("", service.getNameSpaceDeclaration());
-        /*
-        Constructed SOAP Request Message:
-        <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:example="http://ws.cdyne.com/">
-            <SOAP-ENV:Header/>
-            <SOAP-ENV:Body>
-                <example:VerifyEmail>
-                    <example:email>mutantninja@gmail.com</example:email>
-                    <example:LicenseKey>123</example:LicenseKey>
-                </example:VerifyEmail>
-            </SOAP-ENV:Body>
-        </SOAP-ENV:Envelope>
-         */
-        //-------------------------------------------------------
-        // SOAP Body
-        //-------------------------------------------------------
-//        soapMessage = service.buildSoapMessage(message);
-//        SOAPBody soapBody 			= envelope.getBody();
-//        SOAPElement soapBodyElem 	= soapBody.addChildElement("Enviar", "");
-//        SOAPElement soapBodyElem1 	= soapBodyElem.addChildElement("pXml", "");
-//        soapBodyElem1.addTextNode(message);
-//        MimeHeaders headers 		= soapMessage.getMimeHeaders();
-//        headers.addHeader("SOAPAction", "http://tempuri.org/Enviar");
-//        soapMessage.saveChanges();
-        //-------------------------------------------------------
-        /* Print the request message */
-        //-------------------------------------------------------
-        System.out.print("Request SOAP Message:");
-        soapMessage = service.buildSoapMessage(message);
-        soapMessage.writeTo(System.out);
-        System.out.println();
-        return soapMessage;
-    }
+//    private static SOAPMessage createSOAPRequest(IServices service, String message) throws Exception {
+//        //MessageFactory messageFactory 	= MessageFactory.newInstance();
+//        //SOAPMessage soapMessage 		= messageFactory.createMessage();
+////    	SOAPMessage soapMessage = SOAPMessageUtil.buildMessage();
+////    	SOAPPart soapPart 		= soapMessage.getSOAPPart();
+//
+//        //String serverURI = "http://ws.cdyne.com/";
+//        //-------------------------------------------------------
+//        // SOAP Envelope
+//        //-------------------------------------------------------
+////        SOAPEnvelope envelope = soapPart.getEnvelope();
+////        envelope.addNamespaceDeclaration("", service.getNameSpaceDeclaration());
+//        /*
+//        Constructed SOAP Request Message:
+//        <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:example="http://ws.cdyne.com/">
+//            <SOAP-ENV:Header/>
+//            <SOAP-ENV:Body>
+//                <example:VerifyEmail>
+//                    <example:email>mutantninja@gmail.com</example:email>
+//                    <example:LicenseKey>123</example:LicenseKey>
+//                </example:VerifyEmail>
+//            </SOAP-ENV:Body>
+//        </SOAP-ENV:Envelope>
+//         */
+//        //-------------------------------------------------------
+//        // SOAP Body
+//        //-------------------------------------------------------
+////        soapMessage = service.buildSoapMessage(message);
+////        SOAPBody soapBody 			= envelope.getBody();
+////        SOAPElement soapBodyElem 	= soapBody.addChildElement("Enviar", "");
+////        SOAPElement soapBodyElem1 	= soapBodyElem.addChildElement("pXml", "");
+////        soapBodyElem1.addTextNode(message);
+////        MimeHeaders headers 		= soapMessage.getMimeHeaders();
+////        headers.addHeader("SOAPAction", "http://tempuri.org/Enviar");
+////        soapMessage.saveChanges();
+//        //-------------------------------------------------------
+//        /* Print the request message */
+//        //-------------------------------------------------------
+////        System.out.print("Request SOAP Message:");
+////        soapMessage = service.buildSoapMessage(message);
+////        soapMessage.writeTo(System.out);
+////        System.out.println();
+////        return soapMessage;
+//    }
     
 //    private static String getXMLReducao() {
 //		return XMLSender.normalize("<?xml version=\"1.0\" encoding=\"utf-8\"?><ReducaoZ Versao=\"2.0\"><Mensagem><Estabelecimento><Ie>00111111111111</Ie><Cnpj>61099008000141</Cnpj><NomeEmpresarial>COMMERCE LTDA LJ 05</NomeEmpresarial></Estabelecimento><PafEcf><NumeroCredenciamento>00002215232</NumeroCredenciamento><NomeComercial>NEXGEN PDV</NomeComercial><Versao>2.4.1</Versao><CnpjDesenvolvedor>03240156000138</CnpjDesenvolvedor><NomeEmpresarialDesenvolvedor>SECREL SOLUCOES DE INFORMATICA LTDA</NomeEmpresarialDesenvolvedor></PafEcf><Ecf><NumeroFabricacao>DR0207BR000000119418</NumeroFabricacao><Tipo>ECF-IF</Tipo><Marca>DARUMA AUTOMACAO</Marca><Modelo>FS600</Modelo><Versao>010500</Versao><Caixa>10</Caixa><DadosReducaoZ><DataReferencia>2016-05-03</DataReferencia><CRZ>001290</CRZ><COO>000033134</COO><CRO>000019</CRO><VendaBrutaDiaria>2388,42</VendaBrutaDiaria><GT>12179179,85</GT><TotalizadoresParciais><TotalizadorParcial><Nome>06S0300</Nome><Valor>0,00</Valor><ProdutosServicos/></TotalizadorParcial><TotalizadorParcial><Nome>05S0500</Nome><Valor>27,13</Valor><ProdutosServicos><Servico><Descricao>BIG POTE FRUTT</Descricao><Codigo>0000031</Codigo><CodigoTipo>EAN</CodigoTipo><Quantidade>1,00</Quantidade><Unidade>CX</Unidade><ValorUnitario>180,90</ValorUnitario></Servico><Servico><Descricao>BIG POTE FRUTT</Descricao><Codigo>0000031</Codigo><CodigoTipo>EAN</CodigoTipo><Quantidade>1,00</Quantidade><Unidade>CX</Unidade><ValorUnitario>180,90</ValorUnitario></Servico></ProdutosServicos></TotalizadorParcial></TotalizadoresParciais></DadosReducaoZ></Ecf></Mensagem>" + getSgnature() + "</ReducaoZ>");
@@ -203,5 +211,8 @@ public class SOAPClienteSAAJ {
     }
     
     
+    public static String  getXMLStatusServico() {
+		return "<retConsStatServCte versao=\"1.00\"> <tpAmb>2</tpAmb><xServ>STATUS<xServ></retConsStatServCte>";
+	}
     
 }
