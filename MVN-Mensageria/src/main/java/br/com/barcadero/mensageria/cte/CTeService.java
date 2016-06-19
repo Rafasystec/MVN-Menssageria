@@ -34,7 +34,7 @@ public class CTeService extends SuperCTeService {
 	
 	public String getURLService(EnumTpAmbiente tpAmb) {
 		// TODO Auto-generated method stub
-		return icTeService.get;
+		return icTeService.getURLCteConsultaProtocolo();
 	}
 
 	public String getNameSpaceDeclaration() {

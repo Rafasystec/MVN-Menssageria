@@ -6,11 +6,11 @@ public interface ICTeService {
 	
 	public void setAmbiente(EnumTpAmbiente tpAmbi) throws Exception;
 	public void setServico(EnumCTeServicos cteServico);
-	public void getURLCteRecepcao();
-	public void getURLCteRetRecepcao();
-	public void getURLCteInutilizacao();
-	public void getURLCteConsultaProtocolo();
-	public void getURLCteStatusServico();
-	public void getURLCteRecepcaoEvento();
+	public String getURLCteRecepcao();
+	public String getURLCteRetRecepcao();
+	public String getURLCteInutilizacao();
+	public String getURLCteConsultaProtocolo();
+	public String getURLCteStatusServico();
+	public String getURLCteRecepcaoEvento();
 
 }
