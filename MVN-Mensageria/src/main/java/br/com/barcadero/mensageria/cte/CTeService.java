@@ -1,8 +1,11 @@
 package br.com.barcadero.mensageria.cte;
 
 import java.io.IOException;
+import java.io.StringReader;
 
 import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPBodyElement;
@@ -13,6 +16,9 @@ import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
+
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 
 import br.com.barcadero.mensageria.soap.EnumTpAmbiente;
 import br.com.barcadero.mensageria.soap.IServices;
@@ -78,10 +84,12 @@ public class CTeService implements IServices {
 	public SOAPMessage buildSoapMessage(String xMLMessage) throws SOAPException, IOException {
 		SOAPMessage soapMessage = SOAPMessageUtil.buildMessage();
 		SOAPPart soapPart 		= soapMessage.getSOAPPart();
-		SOAPEnvelope envelope = soapPart.getEnvelope();
+		SOAPEnvelope envelope 	= soapPart.getEnvelope();
+		envelope.addNamespaceDeclaration("xsi", "http://www.w3.org/2001/XMLSchema-instance");
+		envelope.addNamespaceDeclaration("xsd", "http://www.w3.org/2001/XMLSchema");
 		//envelope.addNamespaceDeclaration("", "http://www.portalfiscal.inf.br/cte/wsdl/CteRecepcao");
-		SOAPHeader soapHeader		= envelope.getHeader();
-		SOAPHeaderElement cteCabecMsg		= soapHeader.addHeaderElement(
+		SOAPHeader soapHeader			= envelope.getHeader();
+		SOAPHeaderElement cteCabecMsg	= soapHeader.addHeaderElement(
 						new QName("http://www.portalfiscal.inf.br/cte/wsdl/CteRecepcao", "cteCabecMsg"));
 				//.addNamespaceDeclaration("", "http://www.portalfiscal.inf.br/cte/wsdl/CteRecepcao");
 		SOAPElement cUF				= cteCabecMsg.addChildElement("cUF");
@@ -90,11 +98,18 @@ public class CTeService implements IServices {
 		versaoDados.addTextNode("0.02");
 		
 		SOAPBody soapBody 				= envelope.getBody();
+
+//		StringBuilder bodyContent = new StringBuilder();
+//		bodyContent.append("<cteDadosMsg xmlns=\"http://www.portalfiscal.inf.br/cte/wsdl/CteStatusServico\">")
+//		.append(xMLMessage).append("</cteDadosMsg>");
+//		System.out.println(bodyContent.toString());
+//		soapBody.addDocument(convertStringToDocument(bodyContent.toString()));
+		
 		SOAPBodyElement soapBodyElem 	= soapBody.addBodyElement(
 						new QName("http://www.portalfiscal.inf.br/cte/wsdl/CteRecepcao","cteDadosMsg")); 
 			//soapBody.addChildElement("cteDadosMsg", "");
 		//SOAPElement soapBodyElem1 	= soapBodyElem.addChildElement("cteDadosMsg", "");
-		soapBodyElem.addTextNode(xMLMessage);
+		soapBodyElem.addTextNode( "<![CDATA[" + xMLMessage + "]]>");// addTextNode(xMLMessage);
 		//soapBodyElem1.addTextNode(xMLMessage);
 		//MimeHeaders headers 		= soapMessage.getMimeHeaders();
 		// headers.addHeader("SOAPAction", "http://tempuri.org/Enviar");
@@ -107,4 +122,27 @@ public class CTeService implements IServices {
 		// TODO Auto-generated method stub
 		return "https://homologacao.nfe.fazenda.sp.gov.br/cteWEB/services/CteStatusServico.asmx";
 	}
+	
+	public String getXMLBody() {
+		StringBuilder xmlBody = new StringBuilder();
+		xmlBody.append("");
+		return xmlBody.toString();
+	}
+
+	private static Document convertStringToDocument(String xmlStr) {
+	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	    DocumentBuilder builder;
+	    try {
+	        builder = factory.newDocumentBuilder();
+	        Document doc = builder.parse(new InputSource(new StringReader(xmlStr)));
+	        return doc;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return null;
+	}
+
 }
+
+
+
