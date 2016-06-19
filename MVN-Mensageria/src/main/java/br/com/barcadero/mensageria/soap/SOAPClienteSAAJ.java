@@ -3,25 +3,13 @@ package br.com.barcadero.mensageria.soap;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.security.Security;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPConnection;
 import javax.xml.soap.SOAPConnectionFactory;
-import javax.xml.soap.SOAPElement;
-import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPMessage;
-import javax.xml.soap.SOAPPart;
-
-import com.sun.org.apache.bcel.internal.classfile.Field;
 
 import br.com.barcadero.mensageria.cte.CTeService;
 
@@ -104,7 +92,7 @@ public class SOAPClienteSAAJ {
 
 
 	public static String  getXMLStatusServico() {
-		return "<consStatServCte versao=\"1.00\"> <tpAmb>2</tpAmb><xServ>STATUS</xServ></consStatServCte>";
+		return "<consStatServCte versao=\"2.00\"> <tpAmb>2</tpAmb><xServ>STATUS</xServ></consStatServCte>";
 	}
 
 	private void initializeSSL() throws URISyntaxException {
@@ -120,17 +108,19 @@ public class SOAPClienteSAAJ {
 		
 		System.setProperty("java.protocol.handler.pkgs", "com.sun.net.ssl.internal.www.protocol");  
 		Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());  
+		System.setProperty("java.net.useSystemProxies", "true");
 		System.setProperty("javax.net.ssl.keyStoreType", "PKCS12");  
 		System.setProperty("javax.net.ssl.keyStore", getPath2());  
 		System.setProperty("javax.net.ssl.keyStorePassword", "_cert@gbo");  
 		System.setProperty("javax.net.ssl.trustStoreType", "JKS");  
 		System.setProperty("javax.net.ssl.trustStore", getPath());  
+		System.setProperty("sun.security.ssl.allowUnsafeRenegotiation", "true");
 
 	}
 	
 	public String getPath() {
 		ClassLoader classLoader = getClass().getClassLoader();
-		File file = new File(classLoader.getResource("NFeCacerts").getFile());
+		File file = new File(classLoader.getResource("AllCacerts").getFile());
 		String ab = file.getAbsolutePath(); 
 		System.out.println(ab);
 		return ab;
