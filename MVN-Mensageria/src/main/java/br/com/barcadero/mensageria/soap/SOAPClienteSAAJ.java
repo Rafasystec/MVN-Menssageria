@@ -24,7 +24,7 @@ public class SOAPClienteSAAJ {
 	
 	public static void main(String args[]) throws Exception {
 		
-		new SOAPClienteSAAJ().sendAndReceive(new CTeService(), getXMLStatusServico());
+		//new SOAPClienteSAAJ().sendAndReceive(new CTeService(), getXMLStatusServico());
 		//getResponse(getResponseReducaoZ());
 	}
 
